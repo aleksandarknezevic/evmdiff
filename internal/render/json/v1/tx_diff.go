@@ -1,25 +1,27 @@
 package v1
 
-import "github.com/aleksandarknezevic/evmdiff/internal/diff"
+import (
+	"github.com/aleksandarknezevic/evmdiff/internal/diff"
+	"github.com/aleksandarknezevic/evmdiff/pkg/types"
+)
 
 type TxDiffOutput struct {
-	Version string `json:"version"` // "v1"
-	Type    string `json:"type"`    // "tx_diff"
+	Version string `json:"version"`
+	Type    string `json:"type"`
 
 	TxHash string `json:"txHash"`
 	Block  uint64 `json:"block"`
 
 	Changes TxChanges `json:"changes"`
 
-	// Optional fields
 	Events      []Event  `json:"events,omitempty"`
 	CallSummary []string `json:"callSummary,omitempty"`
 }
 
 type TxChanges struct {
-	Balances map[string]Delta            `json:"balances,omitempty"`
-	Storage  map[string]map[string]Delta `json:"storage,omitempty"`
-	Code     map[string]Delta            `json:"code,omitempty"`
+	Balances map[string]types.Delta            `json:"balances,omitempty"`
+	Storage  map[string]map[string]types.Delta `json:"storage,omitempty"`
+	Code     map[string]types.Delta            `json:"code,omitempty"`
 }
 
 type Event struct {
@@ -28,7 +30,6 @@ type Event struct {
 	Args    map[string]interface{} `json:"args"`
 }
 
-// RenderTxDiff converts diff.Diff into v1 JSON format.
 func RenderTxDiff(d diff.Diff, txHash string) TxDiffOutput {
 	return TxDiffOutput{
 		Version: "v1",
